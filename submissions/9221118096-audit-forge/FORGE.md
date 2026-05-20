@@ -83,3 +83,19 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
   fixed viewport. **Next cycle must add scrolling, and must not retry `flex` on
   the description.** Human touch points: **1** (I paused the agent to confirm the
   rollback rather than let it pile a second guess on top of the first).
+
+## Cycle 4 — IdeaDetailScreen · description overflow (✅ success, learned from C3)
+
+- **READ.** Same report (`03-ideadetail-overflow.md`) + the cycle-3 lesson in this
+  ledger: *do not retry `flex` on the description; add a real scroll container.*
+- **LOCATE.** `src/app/ideas/[id].tsx`, the outer `<View style={content}>`.
+- **HYPOTHESIZE.** The viewport is fixed and the content is unbounded, so the only
+  correct fix is to make the content scrollable. Swap the outer `View` for a
+  `ScrollView` (padding moves to `contentContainerStyle`).
+- **REPAIR.** `View` → `ScrollView` with `contentInner` padding + `paddingBottom`.
+- **TEST.** `tsc --noEmit` ✓ · unit ✓ (3/3).
+- **VERIFY.** Idea #1's full description now scrolls to the end and the STATUS row
+  is reachable; short ideas are unaffected. Burn-in region resolved. ✓
+- **COMMIT/ROLLBACK.** Commit `@C4@` — `[FORGE: IdeaDetailScreen] Make detail content scrollable so long descriptions are reachable — 10kg`.
+- **WRITEBACK.** Golden scenario G3 added. Human touch points: 0. *No repeated
+  hypothesis: cycle 4 did not re-try the `flex` approach that cycle 3 ruled out.*

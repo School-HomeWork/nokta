@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getIdea } from "@/data/ideas";
 import { slopColor, slopLabel } from "@/lib/slop";
@@ -18,10 +18,10 @@ export default function IdeaDetailScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={["bottom"]}>
-      {/* BUG (IdeaDetailScreen): content sits in a plain non-scrolling View, so a
-          long description runs off the bottom of the screen and the status row
-          becomes unreachable. Caught by audit report 03. */}
-      <View style={styles.content}>
+      {/* FORGE cycle 4: content is now a ScrollView, so long descriptions scroll
+          and the STATUS row is always reachable (cycle 3 proved flex alone can't
+          fix unbounded content in a fixed viewport). */}
+      <ScrollView style={styles.content} contentContainerStyle={styles.contentInner}>
         <View style={styles.header}>
           <Text style={styles.title}>{idea.title}</Text>
           <View style={[styles.badge, { backgroundColor: slopColor(idea.slopScore) }]}>
@@ -40,14 +40,15 @@ export default function IdeaDetailScreen() {
           <Text style={styles.statusLabel}>STATUS</Text>
           <Text style={styles.statusValue}>Draft · awaiting forge review</Text>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: "#0B1220" },
-  content: { flex: 1, padding: 20 },
+  content: { flex: 1 },
+  contentInner: { padding: 20, paddingBottom: 40 },
   missing: { color: "#94A3B8", fontSize: 16, padding: 20 },
   header: { flexDirection: "row", alignItems: "flex-start", gap: 12, marginBottom: 16 },
   title: { color: "#F9FAFB", fontSize: 22, fontWeight: "800", flex: 1, lineHeight: 28 },

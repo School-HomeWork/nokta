@@ -27,3 +27,12 @@ with each repair, so quality only moves forward.
 - **And** short-title cards render unchanged.
 - **Guards against:** removing `flex:1`/`numberOfLines` on the title or
   `flexShrink:0` on the badge.
+
+### G3 — Idea detail is fully readable for any description length
+*Added by cycle 4.*
+- **Given** the idea with the longest description (id `1`),
+- **Then** the whole description can be scrolled to its end **and** the STATUS row
+  is reachable,
+- **And** the detail screen uses a scroll container (not a fixed `View`).
+- **Guards against:** reverting `ScrollView` back to a plain `View`, or the
+  cycle-3 anti-pattern of "fix overflow with `flex` alone."
