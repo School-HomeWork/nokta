@@ -99,3 +99,33 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
 - **COMMIT/ROLLBACK.** Commit `@C4@` — `[FORGE: IdeaDetailScreen] Make detail content scrollable so long descriptions are reachable — 10kg`.
 - **WRITEBACK.** Golden scenario G3 added. Human touch points: 0. *No repeated
   hypothesis: cycle 4 did not re-try the `flex` approach that cycle 3 ruled out.*
+
+## Cycle 5 — IdeaListScreen · empty-state feature request (✅ success)
+
+- **READ.** `audit-reports/04-idealist-empty.md` — intent is **feature request**,
+  not a bug: when the list is empty the screen is blank; add a friendly empty
+  state. (This is the "customer-as-developer" case from the mission brief.)
+- **LOCATE.** `src/app/ideas/index.tsx`, the `FlatList`.
+- **HYPOTHESIZE.** A `FlatList` renders nothing for empty data unless given a
+  `ListEmptyComponent`. Add one + make the container `flexGrow` so it centers.
+- **REPAIR.** New `EmptyState` component (dot, title, body, "Add your first dot"
+  CTA → `/`), wired via `ListEmptyComponent`, plus `listEmpty` container style.
+- **TEST.** `tsc --noEmit` ✓ · unit ✓ (3/3).
+- **VERIFY.** With `IDEAS` temporarily emptied the screen shows the centered empty
+  state + CTA instead of a blank; with data present the list renders unchanged.
+  Matches the requested behaviour. ✓
+- **COMMIT/ROLLBACK.** Commit `@C5@` — `[FORGE: IdeaListScreen] Add empty-state with CTA for the no-ideas case — 15kg`.
+- **WRITEBACK.** Golden scenario G4 added. Human touch points: 0.
+
+---
+
+## Retrospective
+
+- **Ratchet held:** kg only ever increased on success (5 → 15 → 25 → 40); the one
+  failed hypothesis (C3) was rolled back, never committed as app code.
+- **Learning between cycles:** C4 explicitly consumed C3's logged lesson and
+  avoided repeating the `flex` dead-end (jury question #7).
+- **Minimal diffs:** every successful cycle touched exactly one screen file and
+  one concern — no opportunistic refactors (jury question #4).
+- **Drop-in intact:** `grep -rn "AuditWidget" app/src` still returns one import +
+  one mount; removing that mount line leaves the host fully working.

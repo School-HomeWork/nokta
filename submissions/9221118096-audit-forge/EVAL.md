@@ -36,3 +36,16 @@ with each repair, so quality only moves forward.
 - **And** the detail screen uses a scroll container (not a fixed `View`).
 - **Guards against:** reverting `ScrollView` back to a plain `View`, or the
   cycle-3 anti-pattern of "fix overflow with `flex` alone."
+
+### G4 — Idea list shows a friendly empty state, never a blank screen
+*Added by cycle 5.*
+- **Given** the idea list with zero items,
+- **Then** a centered empty state renders (heading + body + "Add your first dot"
+  CTA) instead of a blank screen,
+- **And** with one or more ideas the list renders normally.
+- **Guards against:** removing `ListEmptyComponent` or the `flexGrow` centering.
+
+---
+
+**Coverage:** 4 golden scenarios across 3 screens. Each was added the moment its
+cycle went green; none has been broken by a later cycle (ratchet intact).
