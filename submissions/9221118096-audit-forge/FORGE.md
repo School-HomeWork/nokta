@@ -17,13 +17,13 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
 
 | # | Report | Hypothesis | Result | Files changed | Test | Commit | kg | Human touch |
 |---|--------|-----------|--------|---------------|------|--------|----|-------------|
-| 1 | 01-onboarding-cta | Footer lacks horizontal padding; stretched CTA spans edge-to-edge → add `paddingHorizontal` | ✅ success | `src/app/index.tsx` | tsc ✓ · unit ✓ | `@C1@` | 5 | 0 |
-| 2 | 02-idealist-badge-clip | Title has no flex/`numberOfLines` and badge no `flexShrink` → constrain title, pin badge | ✅ success | `src/app/ideas/index.tsx` | tsc ✓ · unit ✓ | `@C2@` | 10 | 0 |
-| 3 | 03-ideadetail-overflow | Description is cut off because its `Text` lacks a fixed height → wrap description `Text` in `flex:1` View | ❌ rollback | (reverted) | tsc ✓ · **verify ✗** | `@C3@` | 0 | 1 |
-| 4 | 03-ideadetail-overflow | Real cause is no scroll container (learned from cycle 3) → swap outer `View` for `ScrollView` | ✅ success | `src/app/ideas/[id].tsx` | tsc ✓ · unit ✓ | `@C4@` | 10 | 0 |
-| 5 | 04-idealist-empty | No empty state → add `ListEmptyComponent` with friendly copy + CTA | ✅ success | `src/app/ideas/index.tsx` | tsc ✓ · unit ✓ | `@C5@` | 0 | 15 |
+| 1 | 01-onboarding-cta | Footer lacks horizontal padding; stretched CTA spans edge-to-edge → add `paddingHorizontal` | ✅ success | `src/app/index.tsx` | tsc ✓ · unit ✓ | `5fcac09` | 5 | 0 |
+| 2 | 02-idealist-badge-clip | Title has no flex/`numberOfLines` and badge no `flexShrink` → constrain title, pin badge | ✅ success | `src/app/ideas/index.tsx` | tsc ✓ · unit ✓ | `db67c9c` | 10 | 0 |
+| 3 | 03-ideadetail-overflow | Description is cut off because its `Text` lacks a fixed height → wrap description `Text` in `flex:1` View | ❌ rollback | (reverted) | tsc ✓ · **verify ✗** | `f72aed5` | 0 | 1 |
+| 4 | 03-ideadetail-overflow | Real cause is no scroll container (learned from cycle 3) → swap outer `View` for `ScrollView` | ✅ success | `src/app/ideas/[id].tsx` | tsc ✓ · unit ✓ | `a5f0a99` | 10 | 0 |
+| 5 | 04-idealist-empty | No empty state → add `ListEmptyComponent` with friendly copy + CTA | ✅ success | `src/app/ideas/index.tsx` | tsc ✓ · unit ✓ | `45a36aa` | 15 | 0 |
 
-**Totals:** 4 success · 1 rollback · cumulative **40 kg** · **2 human touch points** (see README for the breakdown). kg is monotonically increasing across successful cycles (5 → 15 → 25 → 40) — the ratchet held.
+**Totals:** 4 success · 1 rollback · cumulative **40 kg** (5 → 15 → 25 → 40 across the successful cycles) · **1 in-loop human touch point** (cycle 3 rollback confirmation). The two fixed endpoints of the loop — capture (writing the audit reports) and review/merge — are by design and counted separately in the README, not as mid-loop interventions. kg is monotonically increasing — the ratchet held.
 
 ---
 
@@ -40,7 +40,7 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
 - **TEST.** `tsc --noEmit` ✓ · `node --test src/lib/*.test.ts` ✓ (3/3).
 - **VERIFY.** Re-rendered onboarding: CTA now sits 20px inset from both edges,
   matching the report's intent. ✓
-- **COMMIT/ROLLBACK.** Commit `@C1@` — `[FORGE: OnboardingScreen] Inset Get Started CTA from screen edges — 5kg`.
+- **COMMIT/ROLLBACK.** Commit `5fcac09` — `[FORGE: OnboardingScreen] Inset Get Started CTA from screen edges — 5kg`.
 - **WRITEBACK.** Golden scenario G1 added to `EVAL.md`. Human touch points: 0.
 
 ## Cycle 2 — IdeaListScreen · long title pushes score badge off-screen
@@ -59,7 +59,7 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
 - **TEST.** `tsc --noEmit` ✓ · unit ✓ (3/3).
 - **VERIFY.** Long title now clamps to two lines with an ellipsis and the badge
   stays fully visible at the right; short cards unchanged. ✓
-- **COMMIT/ROLLBACK.** Commit `@C2@` — `[FORGE: IdeaListScreen] Constrain title + pin slop badge so it stops clipping — 10kg`.
+- **COMMIT/ROLLBACK.** Commit `db67c9c` — `[FORGE: IdeaListScreen] Constrain title + pin slop badge so it stops clipping — 10kg`.
 - **WRITEBACK.** Golden scenario G2 added. Human touch points: 0.
 
 ## Cycle 3 — IdeaDetailScreen · description overflow (❌ ROLLBACK)
@@ -77,7 +77,7 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
   is squeezed too. The burn-in region (cut-off description tail + missing STATUS)
   is **not** resolved. Intent not met → ratchet rule 2 triggers.
 - **COMMIT/ROLLBACK.** **Rolled back** (`git checkout -- ideas/[id].tsx`). No app
-  code committed. Commit `@C3@` records this ledger entry only.
+  code committed. Commit `f72aed5` records this ledger entry only.
 - **WRITEBACK / lesson.** The problem is not "the Text needs space" — it is
   "there is no scroll container at all." `flex` cannot fix unbounded content in a
   fixed viewport. **Next cycle must add scrolling, and must not retry `flex` on
@@ -96,7 +96,7 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
 - **TEST.** `tsc --noEmit` ✓ · unit ✓ (3/3).
 - **VERIFY.** Idea #1's full description now scrolls to the end and the STATUS row
   is reachable; short ideas are unaffected. Burn-in region resolved. ✓
-- **COMMIT/ROLLBACK.** Commit `@C4@` — `[FORGE: IdeaDetailScreen] Make detail content scrollable so long descriptions are reachable — 10kg`.
+- **COMMIT/ROLLBACK.** Commit `a5f0a99` — `[FORGE: IdeaDetailScreen] Make detail content scrollable so long descriptions are reachable — 10kg`.
 - **WRITEBACK.** Golden scenario G3 added. Human touch points: 0. *No repeated
   hypothesis: cycle 4 did not re-try the `flex` approach that cycle 3 ruled out.*
 
@@ -114,7 +114,7 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
 - **VERIFY.** With `IDEAS` temporarily emptied the screen shows the centered empty
   state + CTA instead of a blank; with data present the list renders unchanged.
   Matches the requested behaviour. ✓
-- **COMMIT/ROLLBACK.** Commit `@C5@` — `[FORGE: IdeaListScreen] Add empty-state with CTA for the no-ideas case — 15kg`.
+- **COMMIT/ROLLBACK.** Commit `45a36aa` — `[FORGE: IdeaListScreen] Add empty-state with CTA for the no-ideas case — 15kg`.
 - **WRITEBACK.** Golden scenario G4 added. Human touch points: 0.
 
 ---
