@@ -61,3 +61,25 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
   stays fully visible at the right; short cards unchanged. ✓
 - **COMMIT/ROLLBACK.** Commit `@C2@` — `[FORGE: IdeaListScreen] Constrain title + pin slop badge so it stops clipping — 10kg`.
 - **WRITEBACK.** Golden scenario G2 added. Human touch points: 0.
+
+## Cycle 3 — IdeaDetailScreen · description overflow (❌ ROLLBACK)
+
+- **READ.** `audit-reports/03-ideadetail-overflow.md` — on the long idea the
+  description runs off the bottom edge, can't scroll, STATUS row never shows.
+- **LOCATE.** `currentScreen: IdeaDetailScreen` → `src/app/ideas/[id].tsx`.
+- **HYPOTHESIZE (wrong).** "The description is cut off because its `Text` has no
+  room to grow — wrap it in a `flex: 1` View so it fills the available space."
+- **REPAIR.** Wrapped `<Text style={description}>` in `<View style={{flex:1}}>`.
+- **TEST.** `tsc --noEmit` ✓ — the change is type-clean.
+- **VERIFY (fail).** Re-rendered idea #1: `flex: 1` only redistributes space
+  *inside* the still-non-scrolling parent `View`. The description is taller than
+  any leftover space, so it **still clips** at the box bottom, and now the pitch
+  is squeezed too. The burn-in region (cut-off description tail + missing STATUS)
+  is **not** resolved. Intent not met → ratchet rule 2 triggers.
+- **COMMIT/ROLLBACK.** **Rolled back** (`git checkout -- ideas/[id].tsx`). No app
+  code committed. Commit `@C3@` records this ledger entry only.
+- **WRITEBACK / lesson.** The problem is not "the Text needs space" — it is
+  "there is no scroll container at all." `flex` cannot fix unbounded content in a
+  fixed viewport. **Next cycle must add scrolling, and must not retry `flex` on
+  the description.** Human touch points: **1** (I paused the agent to confirm the
+  rollback rather than let it pile a second guess on top of the first).
