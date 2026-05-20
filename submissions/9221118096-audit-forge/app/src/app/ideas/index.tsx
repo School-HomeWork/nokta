@@ -8,10 +8,11 @@ function IdeaCard({ idea }: { idea: Idea }) {
   return (
     <Pressable style={styles.card} onPress={() => router.push(`/ideas/${idea.id}`)}>
       <View style={styles.cardHeader}>
-        {/* BUG (IdeaListScreen): the title has no flex/numberOfLines and the badge
-            has no flexShrink, so a long title shoves the score badge off the right
-            edge. Caught by audit report 02. */}
-        <Text style={styles.cardTitle}>{idea.title}</Text>
+        {/* FORGE cycle 2: title is now flex-constrained + clamped to 2 lines, and
+            the badge no longer shrinks, so it always stays fully on-screen. */}
+        <Text style={styles.cardTitle} numberOfLines={2}>
+          {idea.title}
+        </Text>
         <View style={[styles.badge, { backgroundColor: slopColor(idea.slopScore) }]}>
           <Text style={styles.badgeScore}>{idea.slopScore}</Text>
           <Text style={styles.badgeLabel}>{slopLabel(idea.slopScore)}</Text>
@@ -47,9 +48,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#2C3E5F",
   },
-  cardHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  cardTitle: { color: "#F9FAFB", fontSize: 16, fontWeight: "700" },
-  badge: { borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, alignItems: "center" },
+  cardHeader: { flexDirection: "row", alignItems: "flex-start" },
+  cardTitle: { color: "#F9FAFB", fontSize: 16, fontWeight: "700", flex: 1, marginRight: 12 },
+  badge: { borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, alignItems: "center", flexShrink: 0 },
   badgeScore: { color: "#0B1220", fontSize: 16, fontWeight: "900" },
   badgeLabel: { color: "#0B1220", fontSize: 8, fontWeight: "800", letterSpacing: 0.5 },
   cardPitch: { color: "#94A3B8", fontSize: 13, marginTop: 8, lineHeight: 18 },

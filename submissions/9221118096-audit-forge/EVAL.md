@@ -18,3 +18,12 @@ with each repair, so quality only moves forward.
 - **Then** the "Get Started" button is inset from both screen edges (not flush),
 - **And** `tsc --noEmit` + `src/lib` unit tests pass.
 - **Guards against:** regressing `footer` padding or the CTA stretch behaviour.
+
+### G2 — Idea card keeps the slop badge on-screen for any title length
+*Added by cycle 2.*
+- **Given** an idea whose title is long enough to wrap,
+- **Then** the title clamps to 2 lines and the slop-score badge stays fully
+  visible at the right edge (never clipped),
+- **And** short-title cards render unchanged.
+- **Guards against:** removing `flex:1`/`numberOfLines` on the title or
+  `flexShrink:0` on the badge.

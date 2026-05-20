@@ -42,3 +42,22 @@ Autonomous repair ledger for the Nokta host app. Each cycle consumes one
   matching the report's intent. ✓
 - **COMMIT/ROLLBACK.** Commit `@C1@` — `[FORGE: OnboardingScreen] Inset Get Started CTA from screen edges — 5kg`.
 - **WRITEBACK.** Golden scenario G1 added to `EVAL.md`. Human touch points: 0.
+
+## Cycle 2 — IdeaListScreen · long title pushes score badge off-screen
+
+- **READ.** `audit-reports/02-idealist-badge-clip.md` — on the long-title card the
+  `97 / PURE SLOP` badge is shoved past the right edge and clipped; short-title
+  cards are fine. Burn-in box sits on the clipped badge.
+- **LOCATE.** `currentScreen: IdeaListScreen` → `src/app/ideas/index.tsx`,
+  `IdeaCard` → `styles.cardHeader / cardTitle / badge`.
+- **HYPOTHESIZE.** Row is `justifyContent: space-between` but the title has no
+  `flex` and no `numberOfLines`, so a long title grows past the badge and the
+  badge (no `flexShrink: 0`) gets pushed out. Give the title `flex: 1` +
+  `numberOfLines={2}` and pin the badge with `flexShrink: 0`.
+- **REPAIR.** `cardTitle: { flex: 1, marginRight: 12 }`, `numberOfLines={2}` on
+  the title, `badge: { flexShrink: 0 }`, header `alignItems: flex-start`.
+- **TEST.** `tsc --noEmit` ✓ · unit ✓ (3/3).
+- **VERIFY.** Long title now clamps to two lines with an ellipsis and the badge
+  stays fully visible at the right; short cards unchanged. ✓
+- **COMMIT/ROLLBACK.** Commit `@C2@` — `[FORGE: IdeaListScreen] Constrain title + pin slop badge so it stops clipping — 10kg`.
+- **WRITEBACK.** Golden scenario G2 added. Human touch points: 0.
