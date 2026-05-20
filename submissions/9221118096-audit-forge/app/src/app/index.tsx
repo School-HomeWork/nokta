@@ -14,8 +14,8 @@ export default function OnboardingScreen() {
       </View>
 
       <View style={styles.footer}>
-        {/* BUG (OnboardingScreen): the CTA has no horizontal margin, so it runs
-            edge-to-edge and looks broken on a phone. Caught by audit report 01. */}
+        {/* FORGE cycle 1: footer now has horizontal padding so the stretched CTA
+            sits inset from both screen edges. */}
         <Pressable style={styles.cta} onPress={() => router.push("/ideas")}>
           <Text style={styles.ctaText}>Get Started</Text>
         </Pressable>
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     lineHeight: 22,
   },
-  footer: { paddingBottom: 28, alignItems: "center", gap: 16 },
+  footer: { paddingBottom: 28, paddingHorizontal: 20, alignItems: "center", gap: 16 },
   cta: {
     backgroundColor: "#D4AF37",
     paddingVertical: 16,
