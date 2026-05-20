@@ -36,9 +36,11 @@ repair work the agent closed on its own.
 
 ## How the audit widget is integrated (drop-in discipline)
 
-- One mount only. `grep -rn "AuditWidget" app/src` returns exactly **one import**
-  (`src/app/_layout.tsx`) and **one mount** (the `<AuditWidget … />` line). Delete
-  that line and the host app keeps working unchanged — the drop-in inverse test.
+- One mount only. `grep -rn "<AuditWidget" app/src` returns exactly **one JSX
+  mount** (`src/app/_layout.tsx`). Delete that line + its import and the host app
+  keeps working unchanged — the drop-in inverse test. (The other `AuditWidget`
+  matches are type-only: the `AuditWidgetDeps` type in `src/audit/auditDeps.tsx`
+  and the local `src/types/mobile-audit.d.ts` shim.)
 - **Host application boundary respected.** The widget imports zero native
   packages. Every capability it needs (`captureScreen`, `captureRef`, `writeFile`,
   `writeFileBinary`, `shareFile`, `storage`) is resolved in the host
