@@ -15,24 +15,21 @@ repair work the agent closed on its own.
 
 ## Links
 
-> ⚠️ **REPLACE BEFORE THE DEADLINE** — these two are mine to fill (see "What the
-> human still has to do" below). Structure/format is final.
-
 - **Expo (run it):** `cd app && npm install && npx expo start` → scan the QR in
-  Expo Go. Hosted preview / EAS build: `https://expo.dev/accounts/ibrahimalicode/projects/nokta-audit-forge-host/builds/REPLACE-WITH-REAL-BUILD-ID`
-- **≤60 sn demo video:** `https://youtu.be/REPLACE-WITH-REAL-VIDEO-ID`
+  Expo Go. Hosted EAS build: https://expo.dev/accounts/ibrahimalicode/projects/app/builds/426245d1-1a81-4d73-ad5c-d7b9058e196f
+- **≤60 sn demo video:** https://youtu.be/m0t2PVyxeZw
 - **PR:** opened against this repo from `submissions/9221118096-audit-forge/`
-- **APK:** `app-release.apk` (in this folder once EAS build finishes — see below)
+- **APK:** `app-release.apk` (in this folder)
 
 ## What's in here
 
-| Path | What |
-|---|---|
-| `app/` | Expo SDK 54 + TypeScript host app (Expo Router, 4 screens) with the audit widget mounted once |
-| `audit-reports/` | 4 burn-in `.md` reports (real screenshots, yellow burn-in box over each bug region) |
-| `FORGE.md` | The cycle ledger — 4 success + 1 rollback, with hypotheses, kg, commit hashes, human touch points |
-| `EVAL.md` | Monotonically growing golden-scenario set (the ratchet's regression net) |
-| `IDEA.md` | The "customer-as-developer" use case I noticed in this composition |
+| Path             | What                                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------- |
+| `app/`           | Expo SDK 54 + TypeScript host app (Expo Router, 4 screens) with the audit widget mounted once     |
+| `audit-reports/` | 4 burn-in `.md` reports (real screenshots, yellow burn-in box over each bug region)               |
+| `FORGE.md`       | The cycle ledger — 4 success + 1 rollback, with hypotheses, kg, commit hashes, human touch points |
+| `EVAL.md`        | Monotonically growing golden-scenario set (the ratchet's regression net)                          |
+| `IDEA.md`        | The "customer-as-developer" use case I noticed in this composition                                |
 
 ## How the audit widget is integrated (drop-in discipline)
 
@@ -54,13 +51,13 @@ repair work the agent closed on its own.
 
 ## The forge run (summary — full detail in FORGE.md)
 
-| # | Screen | Result | kg | Commit |
-|---|--------|--------|----|--------|
-| 1 | Onboarding — CTA hugged screen edges | ✅ | 5 | `5fcac09` |
-| 2 | Idea list — slop badge clipped by long title | ✅ | 10 | `db67c9c` |
-| 3 | Idea detail — overflow via `flex:1` hypothesis | ❌ rollback | 0 | `f72aed5` |
-| 4 | Idea detail — fixed with `ScrollView` (learned from #3) | ✅ | 10 | `a5f0a99` |
-| 5 | Idea list — empty-state feature request | ✅ | 15 | `45a36aa` |
+| #   | Screen                                                  | Result      | kg  | Commit    |
+| --- | ------------------------------------------------------- | ----------- | --- | --------- |
+| 1   | Onboarding — CTA hugged screen edges                    | ✅          | 5   | `5fcac09` |
+| 2   | Idea list — slop badge clipped by long title            | ✅          | 10  | `db67c9c` |
+| 3   | Idea detail — overflow via `flex:1` hypothesis          | ❌ rollback | 0   | `f72aed5` |
+| 4   | Idea detail — fixed with `ScrollView` (learned from #3) | ✅          | 10  | `a5f0a99` |
+| 5   | Idea list — empty-state feature request                 | ✅          | 15  | `45a36aa` |
 
 Cumulative **40 kg**, ratchet intact (kg only increased on success). Cycle 4
 explicitly reused cycle 3's logged lesson instead of repeating the dead-end.
@@ -73,8 +70,9 @@ explicitly reused cycle 3's logged lesson instead of repeating the dead-end.
    the rollback rather than let it stack a second guess on the first failed
    hypothesis.
 
-The two *fixed endpoints* of the loop are by design and are not counted as
+The two _fixed endpoints_ of the loop are by design and are not counted as
 interventions:
+
 - **Capture** — writing the 4 audit reports (the `audit:` commit `c78c513`).
 - **Review/merge** — opening this PR for human review (this is the only gate
   between the agent's commits and `main`).
@@ -84,12 +82,12 @@ verify, commit, writeback — ran without intervention across all 5 cycles.
 
 ## AI tool log
 
-| Cycle / step | Tool |
-|---|---|
-| Scaffold + widget integration | Claude Code (Opus) |
-| Audit report authoring + burn-in screenshots | Claude Code (Opus) + Pillow render |
-| Forge cycles 1–5 (ratchet loop) | Claude Code (Opus), standalone mode |
-| TEST gate | `tsc --noEmit` (strict) + `node --test` on `src/lib/*.test.ts` |
+| Cycle / step                                 | Tool                                                           |
+| -------------------------------------------- | -------------------------------------------------------------- |
+| Scaffold + widget integration                | Claude Code (Opus)                                             |
+| Audit report authoring + burn-in screenshots | Claude Code (Opus) + Pillow render                             |
+| Forge cycles 1–5 (ratchet loop)              | Claude Code (Opus), standalone mode                            |
+| TEST gate                                    | `tsc --noEmit` (strict) + `node --test` on `src/lib/*.test.ts` |
 
 No rate-limit fallbacks were needed; a single agent ran the whole loop.
 
@@ -122,15 +120,19 @@ No rate-limit fallbacks were needed; a single agent ran the whole loop.
 - [x] `EVAL.md` golden scenarios (Track C autonomy bonus)
 - [x] Decision log + human touch points + AI tool log in README
 - [x] Only `submissions/9221118096-audit-forge/` touched (root untouched)
-- [ ] `app-release.apk` present — **pending EAS build (human step)**
-- [ ] Real Expo link + demo video link — **pending (human step)**
+- [x] `app-release.apk` present
+- [x] Demo video link in "Links"
 
-## What the human still has to do (the parts an agent can't)
+## Reproduce
 
-1. **Record the ≤60 sn demo video** (capture a bug with the FAB → export `.md` →
-   show a forge commit), upload to YouTube/Loom/Drive, and paste the link in
-   "Links" above.
-2. **Build the APK:** `cd app && eas build -p android --profile preview`, then put
-   the resulting `app-release.apk` in this folder and paste the `expo.dev` build
-   URL in "Links". (Needs your Expo/EAS login.)
-3. Optionally run `npx expo start` once to generate the live QR for the README.
+```bash
+cd app
+npm install
+npm run typecheck          # tsc --noEmit (strict) — TEST gate
+npm test                   # node --test on src/lib/*.test.ts
+npm start                  # Expo dev server (screens/navigation)
+```
+
+The 🐛 FAB's capture path uses `react-native-view-shot` (a native module not in
+Expo Go), so full bug-capture runs on the EAS APK or a dev build; Expo Go is fine
+for navigating the screens.
